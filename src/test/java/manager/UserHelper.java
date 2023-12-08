@@ -1,7 +1,10 @@
 package manager;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
+import userdto.UserDtoLombok;
 import utils.ConfigReader;
 
 public class UserHelper extends BaseHelper{
@@ -21,8 +24,6 @@ public class UserHelper extends BaseHelper{
     By textSuccessLoginPopUp = By.xpath("//h2[@class='message']");
 
     //By btnLoginNavigatorMenu = By.xpath(ConfigReader.getProperty("btnLoginNavigatorMenu"));
-
-;
     By btnOpenRegForm = By.xpath("//a[contains(@href, '/registration')]");
     By inputNameReg = By.xpath("//input[@id='name']");
     By inputLastNameReg = By.xpath("//input[@id='lastName']");
@@ -55,4 +56,31 @@ public class UserHelper extends BaseHelper{
         clickBase(tabLetTheCarWork);
     }
 
+    public void loginUserDtoLombok(UserDtoLombok userDtoLombok) {
+        clickBase(btnLoginNavigatorMenu);
+        typeTextBase(inputEmailLoginForm, userDtoLombok.getEmail());
+        typeTextBase(inputPasswordLoginForm, userDtoLombok.getPassword());
+        clickBase(btnYallaLoginForm);
+    }
+
+    public void login(UserDtoLombok userDTO) {
+        clickBase(btnLoginNavigatorMenu);
+        typeTextBase(inputEmailLoginForm, userDTO.getEmail());
+        typeTextBase(inputPasswordLoginForm, userDTO.getPassword());
+        clickBase(btnYallaLoginForm);
+    }
+    public void clickOkPopUpSuccessLogin() {
+        clickBase(textPopUpSuccessRegH1);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Actions actions = new Actions(driver);
+        // Use the sendKeys method to simulate pressing the "Enter" key on the active element
+        actions.sendKeys(Keys.TAB).perform();
+        actions.sendKeys(Keys.ESCAPE).perform();
+
+    }
 }

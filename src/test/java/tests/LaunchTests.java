@@ -1,8 +1,6 @@
 package tests;
 
-import org.testng.Assert;
 import org.testng.annotations.*;
-import utils.ConfigProperties;
 
 public class LaunchTests extends BaseTest {
     @BeforeClass(alwaysRun = true)
