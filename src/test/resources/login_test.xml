@@ -1,8 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="smoke">
+<suite name="LoginTests">
     <test name="smoke">
         <classes>
-            <class name="tests.LetTheCarWorkTests"/>
             <class name="tests.LoginTests"/>
         </classes>
     </test>

@@ -2,7 +2,7 @@
 <suite name="LaunchTests">
     <test name="smoke">
         <classes>
-            <class name="tests.LaunchTests"/>
+            <class name="tests.LetTheCarWorkTests"/>
         </classes>
     </test>
 </suite>

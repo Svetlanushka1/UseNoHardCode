@@ -2,7 +2,8 @@
 <suite name="Production">
     <test name="smoke">
         <classes>
-            <class name="tests.LaunchTests"/>
+            <class name="tests.LoginTests"/>
+            <class name="tests.RegistrationTests"/>
         </classes>
     </test>
     <!--    <test name="regression">-->
