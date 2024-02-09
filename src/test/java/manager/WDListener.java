@@ -5,6 +5,7 @@ import org.openqa.selenium.interactions.Sequence;
 import org.openqa.selenium.support.events.WebDriverListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.DatesUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +25,16 @@ public class WDListener implements WebDriverListener {
     public WDListener() { super();
     }
 
+/*
+   @Override
+    public void onException(Throwable throwable, WebDriver driver) {
+        super.onException(throwable, driver);
+        logger.info("we got an exception: " + throwable.toString());
+        logger.error("with the message: " + throwable.getMessage());
+        String name = "src/test/screenshots/screenshot-" + DatesUtils.getDateString() + ".png";
+        takeScreenshot((TakesScreenshot)driver, name);
+        logger.info("created screenshot: " + name);
+    }*/
     @Override
     public void beforeAnyCall(Object target, Method method, Object[] args) {
         WebDriverListener.super.beforeAnyCall(target, method, args);

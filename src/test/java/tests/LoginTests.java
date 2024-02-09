@@ -9,31 +9,67 @@ import io.qameta.allure.Link;
 import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.TmsLink;
-import userdto.UserDTO;
-import userdto.UserDTOWith;
-import userdto.UserDtoLombok;;
+import dto.UserDTO;
+import dto.UserDTOWith;
+import dto.UserDtoLombok;
+import utils.ConfigProperties;
+import utils.DataProviderLogin;;
 
 public class LoginTests extends BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void preconditionsLogin() {
         logoutIflogin();
     }
-
+    @DataProvider(name = "loginData")
+    public Object[][] loginData() {
+        return new Object[][]{
+                {"testqa20@gmail.com", "123456Aa$"},
+                {"testqa201@gmail.com", "123456Aa$"},
+                {"testqa202@gmail.com", "123456Aa$"}
+        };
+    }
 
     @AfterMethod(alwaysRun = true)
     public void postconditionsLogin() {
         app.getUserHelper().clickOkPopUpSuccessLogin();
     }
 
-
-    @DataProvider(name = "loginData")
-    public Object[][] loginData() {
-        return new Object[][]{
-                {"testqa20@gmail.com","123456Aa$"},
-                {"testqa201@gmail.com", "123456Aa$"},
-                {"testqa202@gmail.com","123456Aa$"}
-        };
+    @Test
+    public void positiveLoginFromConfigProperties() {//get login from prodConfig file
+        UserDTO userPropertyFile = new UserDTO(ConfigProperties.getProperty("email"), ConfigProperties.getProperty("password"));
+        logger.info("take login from PROPERTIES file");
+        BaseTest.app.getUserHelper().login(userPropertyFile);
+        Assert.assertTrue(BaseTest.app.getUserHelper().validatePopUpMessageSuccessAfterLogin());
+        logger.info("login using production PROPERTIES file");
     }
+
+    // @Test(dataProvider = "datalogin.csv",dataProviderClass = DataProviderLogin.class)
+    @Test(groups = {"smoke"}, dataProvider = "loginCSV", dataProviderClass = DataProviderLogin.class)
+    public void positiveLoginProvider(UserDtoLombok user) {//get login form csv file
+        logger.info("User: " + user.toString());
+        app.getUserHelper().loginUserDtoLombok(user);
+        flagLogin = true;
+        flagPopUp = true;
+        Assert.assertTrue(app.getUserHelper().validatePopUpMessageSuccessAfterLogin());
+        logger.info("2 login using CSV file");
+
+    }
+
+    @Test(dataProvider = "negativeLoginCSV", dataProviderClass = DataProviderLogin.class)
+    public void negativeDataLoginCSV(UserDtoLombok user) {
+        app.getUserHelper().loginUserDtoLombok(user);
+        flagPopUp = true;
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        Assert.assertTrue(app.getUserHelper().validatePopUpMessageLoginIncorrect());
+    }
+
+//TODO fix waiter Jira
+
+
 
     @Test(groups = {"smoke", "regression"}, dataProvider = "loginData")
     public void positiveLoginUserDTO(String user, String password) {
@@ -52,15 +88,20 @@ public class LoginTests extends BaseTest {
     @Link(name = "Website", url = "https://dev.example.com/")
     @Issue("AUTH-123")
     @TmsLink("TMS-456")
-    public void positiveLoginUserDTOWith() {
-        UserDTOWith userDTOWith = new UserDTOWith()
-                .withEmail("testqa20@gmail.com")
-                .withPassword("123456Aa$");
-        BaseTest.app.getUserHelper().login(userDTOWith);
-        Assert.assertTrue(BaseTest.app.getUserHelper().validatePopUpMessageSuccessAfterLogin());
 
-    }
+
+
 ////////////////////////////////////////////////////////////////////////
+
+
+    @Test(priority = 1, groups = {"smoke", "regression"}, dataProvider = "loginData")
+    public void wrongLoginWithDataProvider(String user, String password) {
+        UserDTO userDTO = new UserDTO(user, password);
+        BaseTest.app.getUserHelper().login(userDTO);
+        Assert.assertTrue(app.getUserHelper().validatePopUpMessageLoginIncorrect());
+    }
+
+    /*
     @Test
     public void positiveLogin() {
         UserDtoLombok userDtoLombok = UserDtoLombok.builder()
@@ -69,6 +110,14 @@ public class LoginTests extends BaseTest {
                 .build();
         app.getUserHelper().loginUserDtoLombok(userDtoLombok);
         Assert.assertTrue(app.getUserHelper().validatePopUpMessageSuccessAfterLogin());
+    }
+       public void positiveLoginUserDTOWith() {
+        UserDTOWith userDTOWith = new UserDTOWith()
+                .withEmail("testqa20@gmail.com")
+                .withPassword("123456Aa$");
+        BaseTest.app.getUserHelper().login(userDTOWith);
+        Assert.assertTrue(BaseTest.app.getUserHelper().validatePopUpMessageSuccessAfterLogin());
+
     }
 
     @Test(groups = {"smoke", "regression"})
@@ -121,13 +170,5 @@ public class LoginTests extends BaseTest {
 
         Assert.assertTrue(app.getUserHelper().validatePopUpMessageLoginIncorrect());
     }
-
-    @Test(priority = 1, groups = {"smoke", "regression"}, dataProvider = "loginData")
-    public void wrongLoginWithDataProvider(String user, String password) {
-        UserDTO userDTO = new UserDTO(user, password);
-        BaseTest.app.getUserHelper().login(userDTO);
-        Assert.assertTrue(app.getUserHelper().validatePopUpMessageLoginIncorrect());
-    }
-
-
+     */
 }

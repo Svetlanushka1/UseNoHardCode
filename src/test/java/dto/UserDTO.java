@@ -1,4 +1,4 @@
-package userdto;
+package dto;
 
 public class UserDTO {
     String name;

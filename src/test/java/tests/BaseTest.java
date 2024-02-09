@@ -5,11 +5,10 @@ import manager.TestNGListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
-import userdto.UserDtoLombok;
+import dto.UserDtoLombok;
 import utils.RandomUtils;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 @Listeners(TestNGListener.class)
@@ -21,12 +20,13 @@ public class BaseTest {
     boolean flagLogin = false, flagPopUp = false;
 
 
-    UserDtoLombok userDtoLombok = UserDtoLombok
+ /* UserDtoLombok userDtoLombok = UserDtoLombok
             .builder()
             .email("testqa20@gmail.com")
             .password("123456Aa$")
             .build();
 
+    */
     @BeforeSuite(alwaysRun = true)
     public void setup() {
         app.init();
